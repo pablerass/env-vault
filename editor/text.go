@@ -45,11 +45,11 @@ func OpenFileInEditor(filename string) error {
 	return cmd.Run()
 }
 
-func GetFromEditor() ([]byte, error) {
-    return EditInEditor("")
+func GetTextFromEditor() ([]byte, error) {
+    return EditTextInEditor("")
 }
 
-func EditInEditor(content string) ([]byte, error) {
+func EditTextInEditor(content string) ([]byte, error) {
 	file, err := ioutil.TempFile(os.TempDir(), "*")
 	if err != nil {
 		return []byte{}, err

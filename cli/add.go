@@ -2,7 +2,6 @@ package cli
 
 import (
     "fmt"
-    "strings"
 
     "github.com/pablerass/env-vault/editor"
     "github.com/pablerass/env-vault/vault"
@@ -31,19 +30,14 @@ func ConfigureAddCommand(app *kingpin.Application) {
 }
 
 func AddCommand(app *kingpin.Application, input AddCommandInput) {
-    envVars := make(vault.EnvVarsSet)
-    varsDefinition, _ := editor.GetFromEditor()
-    varsDefinitions := strings.Split(string(varsDefinition), "\n")
-    for line := range varsDefinitions {
-        if strings.TrimSpace(varsDefinitions[line]) != "" {
-            lineSplit := strings.SplitN(varsDefinitions[line], "=", 2)
-            fmt.Println(lineSplit)
-            envVars[strings.TrimSpace(lineSplit[0])] = strings.TrimSpace(lineSplit[1])
-        }
+    envVars, err := editor.GetFromEditor()
+    if err != nil {
+        app.Fatalf(err.Error())
+        return
     }
     provider := &vault.KeyringProvider{Keyring: input.Keyring, Profile: input.Profile}
 
-    if err := provider.Store(envVars); err != nil {
+    if err = provider.Store(envVars); err != nil {
         app.Fatalf(err.Error())
         return
     }

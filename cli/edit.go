@@ -2,7 +2,6 @@ package cli
 
 import (
     "fmt"
-    "strings"
 
     "github.com/pablerass/env-vault/editor"
     "github.com/pablerass/env-vault/vault"
@@ -38,21 +37,10 @@ func EditCommand(app *kingpin.Application, input EditCommandInput) {
         return
     }
 
-    items := make([]string, len(envVars))
-
-    index := 0
-    for name, value := range envVars {
-        items[index] = name + "=" + value
-        index += 1
-    }
-    varsDefinition, _ := editor.EditInEditor(strings.Join(items, "\n"))
-    varsDefinitions := strings.Split(string(varsDefinition), "\n")
-    for line := range varsDefinitions {
-        if strings.TrimSpace(varsDefinitions[line]) != "" {
-            lineSplit := strings.SplitN(varsDefinitions[line], "=", 2)
-            fmt.Println(lineSplit)
-            envVars[strings.TrimSpace(lineSplit[0])] = strings.TrimSpace(lineSplit[1])
-        }
+    envVars, err = editor.EditInEditor(envVars)
+    if err != nil {
+        app.Fatalf(err.Error())
+        return
     }
     if err := provider.Store(envVars); err != nil {
         app.Fatalf(err.Error())
