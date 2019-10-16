@@ -54,7 +54,7 @@ func ExecCommand(app *kingpin.Application, input ExecCommandInput) {
 
     provider := &vault.KeyringProvider{Keyring: input.Keyring, Profile: input.Profile}
 
-    val, err := provider.Retrieve()
+    envVars, err := provider.Retrieve()
     if err != nil {
         app.Fatalf(err.Error())
         return
@@ -63,7 +63,9 @@ func ExecCommand(app *kingpin.Application, input ExecCommandInput) {
     env := environ(os.Environ())
     env.Set("ENV_VAULT", input.Profile)
 
-    env.Set("TEST_VAR", val)
+    for name, value := range envVars {
+        env.Set(name, value)
+    }
     cmd := exec.Command(input.Command, input.Args...)
     cmd.Env = env
     cmd.Stdin = os.Stdin

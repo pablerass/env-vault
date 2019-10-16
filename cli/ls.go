@@ -2,8 +2,6 @@ package cli
 
 import (
     "fmt"
-    "os"
-    "text/tabwriter"
 
     "github.com/99designs/keyring"
     "gopkg.in/alecthomas/kingpin.v2"
@@ -38,16 +36,7 @@ func LsCommand(app *kingpin.Application, input LsCommandInput) {
         return
     }
 
-    w := tabwriter.NewWriter(os.Stdout, 25, 4, 2, ' ', 0)
-    fmt.Fprintln(w, "Profile")
-    fmt.Fprintln(w, "=======")
-
     for _, profile := range profiles {
-        fmt.Fprintf(w, "%s", profile)
-    }
-
-    if err = w.Flush(); err != nil {
-        app.Fatalf("%v", err)
-        return
+        fmt.Printf("%s", profile)
     }
 }

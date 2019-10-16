@@ -15,7 +15,7 @@ func ExampleExecCommand() {
     ConfigureGlobals(app)
     ConfigureExecCommand(app)
     kingpin.MustParse(app.Parse([]string{
-        "--debug", "exec", "llamas", "--", "sh", "-c", "echo $ENV_VAR2",
+        "--debug", "exec", "llamas", "--", "sh", "-c", "echo $ENV_VAR1",
     }))
 
     // Output:

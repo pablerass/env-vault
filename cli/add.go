@@ -29,7 +29,7 @@ func ConfigureAddCommand(app *kingpin.Application) {
 }
 
 func AddCommand(app *kingpin.Application, input AddCommandInput) {
-    envVars := "value"
+    envVars := vault.EnvVarsSet{"TEST_VAR_1": "A", "TEST_VAR_2": "B"}
     provider := &vault.KeyringProvider{Keyring: input.Keyring, Profile: input.Profile}
 
     if err := provider.Store(envVars); err != nil {

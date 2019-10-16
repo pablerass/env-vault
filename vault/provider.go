@@ -8,7 +8,7 @@ import (
     "github.com/99designs/keyring"
 )
 
-type EnvVarsSet = string
+type EnvVarsSet = map[string]string
 
 type KeyringProvider struct {
     Keyring keyring.Keyring
