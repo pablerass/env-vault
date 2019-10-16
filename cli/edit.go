@@ -10,29 +10,42 @@ import (
     "gopkg.in/alecthomas/kingpin.v2"
 )
 
-type AddCommandInput struct {
+type EditCommandInput struct {
     Profile   string
     Keyring   keyring.Keyring
 }
 
-func ConfigureAddCommand(app *kingpin.Application) {
-    input := AddCommandInput{}
+func ConfigureEditCommand(app *kingpin.Application) {
+    input := EditCommandInput{}
 
-    cmd := app.Command("add", "Adds environment variables profile")
+    cmd := app.Command("edit", "Edit profile environment variables")
     cmd.Arg("profile", "Name of the profile").
         Required().
         StringVar(&input.Profile)
 
     cmd.Action(func(c *kingpin.ParseContext) error {
         input.Keyring = keyringImpl
-        AddCommand(app, input)
+        EditCommand(app, input)
         return nil
     })
 }
 
-func AddCommand(app *kingpin.Application, input AddCommandInput) {
-    envVars := make(vault.EnvVarsSet)
-    varsDefinition, _ := editor.GetFromEditor()
+func EditCommand(app *kingpin.Application, input EditCommandInput) {
+    provider := &vault.KeyringProvider{Keyring: input.Keyring, Profile: input.Profile}
+    envVars, err := provider.Retrieve()
+    if err != nil {
+        app.Fatalf(err.Error())
+        return
+    }
+
+    items := make([]string, len(envVars))
+
+    index := 0
+    for name, value := range envVars {
+        items[index] = name + "=" + value
+        index += 1
+    }
+    varsDefinition, _ := editor.EditInEditor(strings.Join(items, "\n"))
     varsDefinitions := strings.Split(string(varsDefinition), "\n")
     for line := range varsDefinitions {
         if strings.TrimSpace(varsDefinitions[line]) != "" {
@@ -41,12 +54,10 @@ func AddCommand(app *kingpin.Application, input AddCommandInput) {
             envVars[strings.TrimSpace(lineSplit[0])] = strings.TrimSpace(lineSplit[1])
         }
     }
-    provider := &vault.KeyringProvider{Keyring: input.Keyring, Profile: input.Profile}
-
     if err := provider.Store(envVars); err != nil {
         app.Fatalf(err.Error())
         return
     }
 
-    fmt.Printf("Added environment variables to profile %q in vault\n", input.Profile)
+    fmt.Printf("Edited environment variables to profile %q in vault\n", input.Profile)
 }

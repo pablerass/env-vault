@@ -27,6 +27,7 @@ func run(args []string, exit func(int)) {
     cli.ConfigureGlobals(app)
     cli.ConfigureAddCommand(app)
     cli.ConfigureListCommand(app)
+    cli.ConfigureEditCommand(app)
     cli.ConfigureExecCommand(app)
     cli.ConfigureRemoveCommand(app)
 
