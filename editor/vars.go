@@ -1,7 +1,6 @@
 package editor
 
 import (
-    "fmt"
     "strings"
 
     "github.com/pablerass/env-vault/vault"
@@ -13,22 +12,21 @@ func GetFromEditor() (vault.EnvVarsSet, error) {
 }
 
 func EditInEditor(envVars vault.EnvVarsSet) (vault.EnvVarsSet, error) {
-    items := make([]string, len(envVars))
+    currentEnvVarLines := make([]string, len(envVars))
 
-    index := 0
+    line := 0
     for name, value := range envVars {
-        items[index] = name + "=" + value
-        index += 1
-        fmt.Println(items)
+        currentEnvVarLines[line] = name + "=" + value
+        line += 1
     }
-    varsDefinition, err := EditTextInEditor(strings.Join(items, "\n"))
+    envVarsString, err := EditTextInEditor(strings.Join(currentEnvVarLines, "\n"))
     if err != nil {
         return envVars, err
     }
-    varsDefinitions := strings.Split(string(varsDefinition), "\n")
-    for line := range varsDefinitions {
-        if strings.TrimSpace(varsDefinitions[line]) != "" {
-            lineSplit := strings.SplitN(varsDefinitions[line], "=", 2)
+    updatedEnvVarLines := strings.Split(string(envVarsString), "\n")
+    for line = range updatedEnvVarLines {
+        if strings.TrimSpace(updatedEnvVarLines[line]) != "" {
+            lineSplit := strings.SplitN(updatedEnvVarLines[line], "=", 2)
             envVars[strings.TrimSpace(lineSplit[0])] = strings.TrimSpace(lineSplit[1])
         }
     }
