@@ -10,10 +10,6 @@ os:
 env:
   - GO111MODULE=on
 
-before_script:
-  - go install golang.org/x/lint
-
 script:
-  - golint ./...
   - go vet ./...
   - go test -race ./...
