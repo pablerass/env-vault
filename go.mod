@@ -11,5 +11,6 @@ require (
 	github.com/go-ini/ini v1.48.0 // indirect
 	github.com/skratchdot/open-golang v0.0.0-20190402232053-79abb63cd66e // indirect
 	golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4
+	golang.org/x/lint v0.0.0-20190930215403-16217165b5de // indirect
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 )

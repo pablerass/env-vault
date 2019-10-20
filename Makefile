@@ -7,6 +7,10 @@ SRC=$(shell find . -name '*.go')
 
 all: env-vault-linux-amd64 env-vault-windows-386.exe env-vault-freebsd-amd64 env-vault-darwin-amd64
 
+test:
+	go vet ./...
+	go test -race ./...
+
 clean:
 	rm -f env-vault-linux-amd64 env-vault-darwin-amd64 env-vault-windows-386.exe env-vault-freebsd-amd64
 

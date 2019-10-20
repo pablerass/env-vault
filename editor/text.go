@@ -1,10 +1,10 @@
 package editor
 
 import (
-    "io/ioutil"
-    "os"
-    "os/exec"
-    "strings"
+	"io/ioutil"
+	"os"
+	"os/exec"
+	"strings"
 )
 
 const DefaultEditor = "vim"
@@ -20,15 +20,15 @@ func getEditor() string {
 }
 
 func knownEditorArguments(executable string, filename string) []string {
-    args := []string{filename}
+	args := []string{filename}
 
-    if strings.Contains(executable, "Visual Studio Code.app") {
-        args = append([]string{"--wait"}, args...)
-    }
+	if strings.Contains(executable, "Visual Studio Code.app") {
+		args = append([]string{"--wait"}, args...)
+	}
 
-    // Other common editors
+	// Other common editors
 
-    return args
+	return args
 }
 
 func OpenFileInEditor(filename string) error {
@@ -46,7 +46,7 @@ func OpenFileInEditor(filename string) error {
 }
 
 func GetTextFromEditor() ([]byte, error) {
-    return EditTextInEditor("")
+	return EditTextInEditor("")
 }
 
 func EditTextInEditor(content string) ([]byte, error) {
@@ -60,9 +60,9 @@ func EditTextInEditor(content string) ([]byte, error) {
 	// Defer removal of the temporary file in case any of the next steps fail.
 	defer os.Remove(filename)
 
-    if _, err = file.WriteString(content); err != nil {
+	if _, err = file.WriteString(content); err != nil {
 		return []byte{}, err
-    }
+	}
 
 	if err = file.Close(); err != nil {
 		return []byte{}, err
