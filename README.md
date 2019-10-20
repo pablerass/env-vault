@@ -2,9 +2,8 @@
 
 ## TODO
 
-* Add vars file format management.
-* Add more meaningful errors.
-* Add possible combination of multiple environments at once.
-* Make tests work.
-* Add travis execution.
+* Add lint to travis.
+* Add GitHub release generation on tags in travis.
+* Manage properly errors in file env edition.
 * Add autocompletion.
+* Add possible combination of multiple environments at once.
