@@ -37,6 +37,6 @@ func LsCommand(app *kingpin.Application, input LsCommandInput) {
 	}
 
 	for _, profile := range profiles {
-		fmt.Printf("%s", profile)
+		fmt.Println(profile)
 	}
 }
