@@ -8,14 +8,13 @@ import (
 	"github.com/99designs/keyring"
 )
 
-type EnvVarsSet = map[string]string
 
 type KeyringProvider struct {
 	Keyring keyring.Keyring
 	Profile string
 }
 
-func (p *KeyringProvider) Retrieve() (val EnvVarsSet, err error) {
+func (p *KeyringProvider) Retrieve() (val EnvVars, err error) {
 	log.Printf("Looking up keyring for %s", p.Profile)
 	item, err := p.Keyring.Get(p.Profile)
 	if err != nil {
@@ -28,7 +27,7 @@ func (p *KeyringProvider) Retrieve() (val EnvVarsSet, err error) {
 	return val, err
 }
 
-func (p *KeyringProvider) Store(val EnvVarsSet) error {
+func (p *KeyringProvider) Store(val EnvVars) error {
 	bytes, err := json.Marshal(val)
 	if err != nil {
 		return err

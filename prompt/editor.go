@@ -1,4 +1,4 @@
-package editor
+package prompt
 
 import (
 	"io/ioutil"
@@ -26,12 +26,10 @@ func knownEditorArguments(executable string, filename string) []string {
 		args = append([]string{"--wait"}, args...)
 	}
 
-	// Other common editors
-
 	return args
 }
 
-func OpenFileInEditor(filename string) error {
+func openFileInEditor(filename string) error {
 	executable, err := exec.LookPath(getEditor())
 	if err != nil {
 		return err
@@ -45,14 +43,14 @@ func OpenFileInEditor(filename string) error {
 	return cmd.Run()
 }
 
-func GetTextFromEditor() ([]byte, error) {
+func GetTextFromEditor() (string, error) {
 	return EditTextInEditor("")
 }
 
-func EditTextInEditor(content string) ([]byte, error) {
+func EditTextInEditor(content string) (string, error) {
 	file, err := ioutil.TempFile(os.TempDir(), "*")
 	if err != nil {
-		return []byte{}, err
+		return "", err
 	}
 
 	filename := file.Name()
@@ -61,21 +59,21 @@ func EditTextInEditor(content string) ([]byte, error) {
 	defer os.Remove(filename)
 
 	if _, err = file.WriteString(content); err != nil {
-		return []byte{}, err
+		return "", err
 	}
 
 	if err = file.Close(); err != nil {
-		return []byte{}, err
+		return "", err
 	}
 
-	if err = OpenFileInEditor(filename); err != nil {
-		return []byte{}, err
+	if err = openFileInEditor(filename); err != nil {
+		return "", err
 	}
 
 	bytes, err := ioutil.ReadFile(filename)
 	if err != nil {
-		return []byte{}, err
+		return "", err
 	}
 
-	return bytes, nil
+	return string(bytes), nil
 }

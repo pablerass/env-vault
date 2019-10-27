@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/99designs/keyring"
-	"github.com/pablerass/env-vault/editor"
+	"github.com/pablerass/env-vault/prompt"
 	"github.com/pablerass/env-vault/vault"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
@@ -38,7 +38,13 @@ func AddCommand(app *kingpin.Application, input AddCommandInput) {
 		}
 	}
 
-	envVars, err := editor.GetFromEditor()
+	text, err := prompt.GetTextFromEditor()
+	if err != nil {
+		app.Fatalf(err.Error())
+		return
+	}
+
+	envVars, err := vault.NewEnvVars(text)
 	if err != nil {
 		app.Fatalf(err.Error())
 		return
